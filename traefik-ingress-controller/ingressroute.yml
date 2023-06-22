@@ -3,11 +3,9 @@ kind: IngressRoute
 metadata:
   name: myingressroute
   namespace: trivago
-
 spec:
   entryPoints:
     - web
-
   routes:
   - match: Host(`version1.trivago.apps.com`) && PathPrefix(`/`)
     kind: Rule

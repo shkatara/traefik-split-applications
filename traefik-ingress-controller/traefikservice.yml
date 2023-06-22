@@ -3,7 +3,6 @@ kind: TraefikService
 metadata:
   name: traefikservice
   namespace: trivago
-
 spec:
   weighted:
     services:
