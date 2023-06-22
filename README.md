@@ -1,4 +1,9 @@
-#To be able to install the cluster, I am bootstraping a cluster using kubeadm version 1.27.3. I am following on a single master node that also works as the worker. Consider the following pre-requisistes before installing the cluster. 
+#Splitting the traffic between two services using Traefik Ingress Proxy:
+
+![](https://github.com/shkatara/traefik-split-applications/trivago_traefik_split.gif)
+
+
+##To be able to install the cluster, I am bootstraping a cluster using kubeadm version 1.27.3. I am following on a single master node that also works as the worker. Consider the following pre-requisistes before installing the cluster. 
 ======
 1. Install Kubeadm, kubelet and kubectl from github / kubernetes website. 
 2. Install a container runtime. For the simplicity, I am using docker from Docker Inc. 
