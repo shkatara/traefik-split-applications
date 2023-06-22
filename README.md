@@ -1,6 +1,6 @@
 #Splitting the traffic between two services using Traefik Ingress Proxy:
 
-![](https://github.com/shkatara/traefik-split-applications/trivago_traefik_split.gif)
+![Traefik Split](https://raw.githubusercontent.com/shkatara/traefik-split-applications/main/trivago_traefik_split.gif)
 
 
 ##To be able to install the cluster, I am bootstraping a cluster using kubeadm version 1.27.3. I am following on a single master node that also works as the worker. Consider the following pre-requisistes before installing the cluster. 
