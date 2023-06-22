@@ -2,8 +2,12 @@
 
 ![Traefik Split](https://raw.githubusercontent.com/shkatara/traefik-split-applications/main/trivago_traefik_split.gif)
 
+#Infrastructure Monitoring with Prometheus and Grafana
 
-##To be able to install the cluster, I am bootstraping a cluster using kubeadm version 1.27.3. I am following on a single master node that also works as the worker. Consider the following pre-requisistes before installing the cluster. 
+![Infrastructure_Monitoring](https://raw.githubusercontent.com/shkatara/traefik-split-applications/main/prometheus-grafana-monitoring.gif)
+
+
+#To be able to install the cluster, I am bootstraping a cluster using kubeadm version 1.27.3. I am following on a single master node that also works as the worker. Consider the following pre-requisistes before installing the cluster. 
 ======
 1. Install Kubeadm, kubelet and kubectl from github / kubernetes website. 
 2. Install a container runtime. For the simplicity, I am using docker from Docker Inc. 
@@ -62,7 +66,7 @@ unmanaged-devices=interface-name:cali*;interface-name:tunl*;interface-name:vxlan
 =====
 ```bash
 [root@kubesys ~]#  kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/tigera-operator.yaml
-[root@kubesys ~]#  kubectl create -f custom-resources.yml
+[root@kubesys ~]#  kubectl create -f calico/custom-resources.yml
 ```
 ##Deploy Traefik Ingress Controller
 
@@ -128,3 +132,4 @@ Let us test the traffic splitting between two applications. We will send 100 req
 ```
 
 As we can see, the traffic out of 100 requests, 70 are being sent to first application and the rest 30% is being sent to the other application. Hence, we know the setup and the infrastructure is working as expected.
+
