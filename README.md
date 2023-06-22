@@ -6,8 +6,33 @@
 4. If you are using NetworkManager, it has to be configured before attempting to use calico networking. 
 5. Also, install helm on your machine. 
 
+##System Information on which the setup is performed:
 
-Write the following in /etc/NetworkManager/conf.d/calico.conf. As NetworkManager manipulates routing for network interfaces in the default network namespace where calico veth pair's are created, we do not want networkmanager to interfere with these interface's routing. 
+```bash
+[root@kubesys ~]# cat /etc/os-release
+NAME="CentOS Linux"
+VERSION="8"
+ID="centos"
+ID_LIKE="rhel fedora"
+VERSION_ID="8"
+PLATFORM_ID="platform:el8"
+PRETTY_NAME="CentOS Linux 8"
+ANSI_COLOR="0;31"
+CPE_NAME="cpe:/o:centos:centos:8"
+HOME_URL="https://centos.org/"
+BUG_REPORT_URL="https://bugs.centos.org/"
+CENTOS_MANTISBT_PROJECT="CentOS-8"
+CENTOS_MANTISBT_PROJECT_VERSION="8"
+```
+
+```bash
+[root@osboxes ~]# free -m
+              total        used        free      shared  buff/cache   available
+Mem:           3735        1782         141          10        1812        1723
+Swap:             0           0           0
+```
+
+NOTE: Write the following in /etc/NetworkManager/conf.d/calico.conf. As NetworkManager manipulates routing for network interfaces in the default network namespace where calico veth pair's are created, we do not want networkmanager to interfere with these interface's routing. 
 
 ```bash
 [root@kubesys ~]# vi /etc/NetworkManager/conf.d/calico.conf
