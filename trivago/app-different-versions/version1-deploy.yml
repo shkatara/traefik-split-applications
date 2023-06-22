@@ -1,0 +1,82 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: version1
+  name: version1
+  namespace: trivago
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: version1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: version1
+    spec:
+      volumes:
+        - name: shared-data
+          emptyDir: {}
+      initContainers:
+       - name: content-container
+         image: debian
+         volumeMounts:
+           - name: shared-data
+             mountPath: /pod-data
+         command: ["/bin/sh"]
+         args: ["-c", "echo I am version v1! > /pod-data/index.html"]
+      containers:
+      - image: docker.io/nginx:1.24.0
+        name: nginx-v1
+        volumeMounts:
+          - name: shared-data
+            mountPath: /usr/share/nginx/html/
+        ports:
+        - containerPort: 80
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: version1
+  name: version1
+  namespace: trivago
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: version1
+status:
+  loadBalancer: {}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  generation: 2
+  name: version1
+  namespace: trivago
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: version1.trivago.apps.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: version1
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+status:
+  loadBalancer: {}

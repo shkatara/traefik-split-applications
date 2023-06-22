@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: TraefikService
+metadata:
+  name: traefikservice
+  namespace: trivago
+
+spec:
+  weighted:
+    services:
+      - name: version1
+        port: 80
+        weight: 70
+      - name: version2
+        port: 80
+        weight: 30
