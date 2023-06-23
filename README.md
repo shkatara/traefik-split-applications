@@ -9,11 +9,43 @@
 
 #To be able to install the cluster, I am bootstraping a cluster using kubeadm version 1.27.3. I am following on a single master node that also works as the worker. Consider the following pre-requisistes before installing the cluster. 
 ======
-1. Install Kubeadm, kubelet and kubectl from github / kubernetes website. 
-2. Install a container runtime. For the simplicity, I am using docker from Docker Inc. 
-3. I will be disabling firewalld because we are using calico. These rules may interfere with the rules added by Calico and result in some strange behaviour. 
-4. If you are using NetworkManager, it has to be configured before attempting to use calico networking. 
+1. Install Kubeadm, kubelet and kubectl from github / kubernetes website.
+```bash
+cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+exclude=kubelet kubeadm kubectl
+EOF
+[root@kubesys ~]# setenforce 0
+[root@kubesys ~]# sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+[root@kubesys ~]# yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+[root@kubesys ~]# sudo systemctl enable --now kubelet
+```   
+2. Install a container runtime. For the simplicity, I am using docker from Docker Inc.
+```bash
+[root@kubesys ~]# yum install -y yum-utils
+[root@kubesys ~]# yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+[root@kubesys ~]# yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y 
+[root@kubesys ~]# systemctl enable --now docker
+``` 
+3. I will be disabling firewalld because we are using calico. These rules may interfere with the rules added by Calico and result in some strange behaviour.
+```bash
+[root@kubesys ~]# systemctl disable --now firewalld
+```
+4. If you are using NetworkManager, it has to be configured before attempting to use calico networking. As NetworkManager manipulates routing for network interfaces in the default network namespace where calico veth pair's are created, we do not want networkmanager to interfere with these interface's routing
+```bash
+[root@kubesys ~]# vi /etc/NetworkManager/conf.d/calico.conf
+[keyfile]
+unmanaged-devices=interface-name:cali*;interface-name:tunl*;interface-name:vxlan.calico;interface-name:vxlan-v6.calico;interface-name:wireguard.cali;interface-name:wg-v6.cali
+```
 5. Also, install helm on your machine. 
+```bash
+[root@kubesys ~]# curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+```
 
 ##System Information on which the setup is performed:
 
@@ -41,19 +73,11 @@ Mem:           3735        1782         141          10        1812        1723
 Swap:             0           0           0
 ```
 
-NOTE: Write the following in /etc/NetworkManager/conf.d/calico.conf. As NetworkManager manipulates routing for network interfaces in the default network namespace where calico veth pair's are created, we do not want networkmanager to interfere with these interface's routing. 
-
-```bash
-[root@kubesys ~]# vi /etc/NetworkManager/conf.d/calico.conf
-
-[keyfile]
-unmanaged-devices=interface-name:cali*;interface-name:tunl*;interface-name:vxlan.calico;interface-name:vxlan-v6.calico;interface-name:wireguard.cali;interface-name:wg-v6.cali
-```
 ##Install the cluster using kubeadm, do the following
 =====
 
 ```bash
-[root@kubesys ~]#  kubeadm init --pod-network-cidr 10.244.0.0/16
+[root@kubesys ~]#  kubeadm init --pod-network-cidr 10.244.0.0/16  --cri-socket unix:///var/run/containerd/containerd.sock
 ```
 ##Configure your root user to be able to connect with kuberneres cluster
 =====
@@ -125,9 +149,9 @@ Let us create the given two resources and we will then check for the application
 Let us test the traffic splitting between two applications. We will send 100 requests and it should be spliiting 70% to the first application, and the rest 30% should be sent to the second application. This will prove that our goal is achieved to split the traffic
 
 ```bash
-[root@kubesys ~]# for i in {1..100}; do curl version1.trivago.apps.com:web_port 2>/dev/null; done | grep v1 | wc -l
+[root@kubesys ~]# for i in {1..100}; do curl version1.trivago.apps.com:$web_port 2>/dev/null; done | grep v1 | wc -l
 70
-[root@kubesys ~]# for i in {1..100}; do curl version1.trivago.apps.com:web_port 2>/dev/null; done | grep v2 | wc -l
+[root@kubesys ~]# for i in {1..100}; do curl version1.trivago.apps.com:$web_port 2>/dev/null; done | grep v2 | wc -l
 30
 ```
 
