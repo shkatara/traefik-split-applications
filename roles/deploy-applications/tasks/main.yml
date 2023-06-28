@@ -1,0 +1,43 @@
+---
+# tasks file for roles/deploy-applications
+- name: Create trivago namespace
+  kubernetes.core.k8s:
+    state: present
+    src: namespace.yml 
+
+- name: Create deployment for version1 of the application
+  kubernetes.core.k8s:
+    state: present
+    src: version1/deployment.yml 
+
+- name: Create deployment for version2 of the application
+  kubernetes.core.k8s:
+    state: present
+    src: version2/deployment.yml 
+
+- name: Deploy service for version1 of the application
+  kubernetes.core.k8s:
+    state: present
+    src: version1/service.yml 
+
+- name: Deploy service for version2 of the application
+  kubernetes.core.k8s:
+    state: present
+    src: version2/service.yml 
+
+- name: Deploy ingress for version1 of the application
+  kubernetes.core.k8s:
+    state: present
+    src: version1/ingress.yml 
+
+- name: Deploy ingress for version2 of the application
+  kubernetes.core.k8s:
+    state: present
+    src: version2/ingress.yml 
+
+- name: create entry for local dns resolution
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ ansible_default_ipv4.address }} version1.trivago.apps.com version2.trivago.apps.com" 
+    create: yes
+

@@ -1,0 +1,12 @@
+---
+# tasks file for traefik-split
+
+- name: Create traefikservice for load balancing between two versions 
+  kubernetes.core.k8s:
+    state: present
+    src: traefikservice.yml 
+
+- name: Create IngressRoute for mapping ingress to traefik
+  kubernetes.core.k8s:
+    state: present
+    src: ingressroute.yml 

@@ -1,0 +1,41 @@
+- name: Install Kubernetes, Install Calico, Install Helm, Deploy Application and Configure traffic split between two application versions
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Install Kubernetes Binaries
+      import_role: 
+        name: kubernetes-binaries-install
+
+    - name: Install Docker Binaries
+      import_role: 
+        name: docker-binaries-install
+
+    - name: Disable Firewalld
+      systemd:
+        name: firewalld
+        state: stopped
+        enabled: false
+        
+    - name: Configure NetworkManager to ignore Calico managed interfaces
+      import_role: 
+        name: networkmanager_config
+    
+    - name: Initialize Kubernetes Cluster
+      import_role: 
+        name: kubeadm_init
+
+    - name: Install Calico CNI on the cluster
+      import_role: 
+        name: calico_install
+
+    - name: Install Helm and Traefik Ingress Controller
+      import_role: 
+        name: helm_install_config
+
+    - name: Create two different versions of the application
+      import_role:
+        name: deploy-applications
+
+    - name: Split Traffic between two different versions of the applications
+      import_role: 
+        name: traefik-split

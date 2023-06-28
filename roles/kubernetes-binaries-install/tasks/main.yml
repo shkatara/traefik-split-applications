@@ -1,0 +1,31 @@
+---
+# tasks file for roles/kubernetes-binaries-install
+- name: Add Kubernetes Repository
+  yum_repository:
+    name: Kubernetes
+    description: Kubernetes repo
+    file: kubernetes
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+    enabled: yes
+    gpgcheck: no
+
+- name: Put SELinux in permissive mode, logging actions that would be blocked.
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: Install kubelet kubeadm and kubelet
+  yum:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+    state: present
+
+- name: enable and start kubelet service
+  systemd:
+    name: kubelet
+    state: started
+    enabled: true
+
+

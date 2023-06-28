@@ -1,0 +1,28 @@
+---
+# tasks file for roles/docker-binaries-install
+- name: Add Docker Repository
+  yum_repository:
+    name: Docker
+    description: Docker repo
+    file: docker
+    baseurl: https://download.docker.com/linux/centos/docker-ce.repo
+    enabled: yes
+    gpgcheck: no
+
+- name: Install docker-ce docker-ce-cli containerd.io and other required docker packages
+  yum:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: present
+
+- name: enable and start docker
+  systemd:
+    name: docker
+    state: started
+    enabled: true
+
+

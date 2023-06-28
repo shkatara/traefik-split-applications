@@ -1,0 +1,20 @@
+---
+# tasks file for roles/networkmanager_config
+#
+- name: create NetworkManager drop in directory for calico config
+  file:
+    state: directory
+    path: /etc/NetworkManager/conf.d/calico.conf
+
+- name: Check for NetworkManager status
+  command: systemctl is-active NetworkManager
+  changed_when: false
+  register: nm_status
+
+- name: Copy NetworkManager config files for calico CNI
+  copy:
+    src: calico.conf
+    dest: /etc/NetworkManager/conf.d/calico.conf
+  when: nm_status.stdout == "active"
+
+

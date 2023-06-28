@@ -1,0 +1,24 @@
+---
+# tasks file for roles/kubeadm_init
+- name: Install Kubernetes using kubeadm init
+  command: kubeadm init --pod-network-cidr 10.244.0.0/16  --cri-socket unix:///var/run/containerd/containerd.sock
+
+- name: create /root/.kube/ directory
+  file:
+    state: directory
+    path: /root/.kube
+
+- name: copy admin.conf to root home directory
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /root/.kube/config
+
+- name: Remove taint from master node ( as a single node install ).
+  kubernetes.core.k8s_taint:
+    state: absent
+    name: "{{ ansible_fqdn }}"
+    taints:
+    - effect: NoSchedule
+      key: "node-role.kubernetes.io/control-plane"
+      value: "-"
+

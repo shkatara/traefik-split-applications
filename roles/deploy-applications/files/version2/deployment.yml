@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: version2
+  name: version2
+  namespace: trivago
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: version2
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: version2
+    spec:
+      volumes:
+        - name: shared-data
+          emptyDir: {}
+      initContainers:
+       - name: content-container
+         image: debian
+         volumeMounts:
+           - name: shared-data
+             mountPath: /pod-data
+         command: ["/bin/sh"]
+         args: ["-c", "echo I am version v2! > /pod-data/index.html"]
+      containers:
+      - image: docker.io/nginx:1.24.0
+        name: nginx-v2
+        volumeMounts:
+          - name: shared-data
+            mountPath: /usr/share/nginx/html/
+        ports:
+        - containerPort: 80
+        resources: {}
+status: {}

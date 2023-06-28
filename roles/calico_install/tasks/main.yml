@@ -1,0 +1,13 @@
+---
+# tasks file for roles/calico_install
+- name: Install calico operator
+  kubernetes.core.k8s:
+    state: present
+    src: calico-custom-resources.yml 
+    wait_timeout: 180
+
+- name: create calico node installation
+  kubernetes.core.k8s:
+    state: present
+    src: custom-resources.yml
+    wait_timeout: 180

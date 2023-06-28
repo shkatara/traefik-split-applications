@@ -1,0 +1,17 @@
+---
+# tasks file for roles/helm_install
+- name: Install Helm v3
+  command: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+- name: Add traefik chart repo
+  kubernetes.core.helm_repository:
+    name: traefik
+    repo_url: "https://helm.traefik.io/traefik"
+  
+- name: Deploy latest version of traefik ingress helm chart inside default namespace
+  kubernetes.core.helm:
+    name: traefik
+    chart_ref: traefik/traefik
+    release_namespace: default
+    create_namespace: false
+
