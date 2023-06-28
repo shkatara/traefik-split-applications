@@ -59,7 +59,8 @@ I am version v2!
 ```
 
 Splitting Traffic between two application versions.
-We will be using Traefik Proxy to split traffic between two different applications. This lets us split traffic without having to go through the overhead of istio or any other service mesh. 
+
+<br>We will be using Traefik Proxy to split traffic between two different applications. This lets us split traffic without having to go through the overhead of istio or any other service mesh. 
 
 There are two resources we will deploy to work with splitting the traffic between two services with Traefik:
 1. TraefikService: TraefikService is an API resource in Kubernetes that is an implementation of traefik service. With traefik service resource, we can implement load balancing to balance the requests between multiple services based on weights. 
