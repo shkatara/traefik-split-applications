@@ -18,7 +18,7 @@ While not shown in the diagram, the split is with the ratio of 70:30 for App_ver
 70% traffic will go to Application Version 1.
 30% traffic will go to Application Version 1.
 
-#Appications and Versions used:
+Appications and Versions used:
 
 
 | Applications  | Version |
@@ -32,12 +32,12 @@ While not shown in the diagram, the split is with the ratio of 70:30 for App_ver
 | Python  | 3.6 |
 | Ansible  | 2.9 |
 
-#Important Decision Regarding Disabling Firewalld:
+Important Decision Regarding Disabling Firewalld:
 
 I understand disabling firewalld is not the right approach, but it is a pre-requisites for Calico so that firewalld does not interfere with rules added by Calico. 
 If a host firewall is needed, Calico can be used for the same.  It can be configured by Calico HostEndpoint and GlobalNetworkPolicy. 
 
-#Installing the stack:
+Installing the stack:
 
 ```
 [root@kubesys ~]# git clone https://github.com/shkatara/traefik-split-applications.git
@@ -46,7 +46,7 @@ If a host firewall is needed, Calico can be used for the same.  It can be config
 
 ```
 
-#Test the application Ingresses.
+Test the application Ingresses.
 Once the application is deployed after completely running the site.yml, and traefik is installed, by default in the simplest configuration, it creates a LoadBalancer type of service and exposes ports for port 80 and 443 on the node. So, when we are routing traffic to the ingress using URLs, we need to append the port number of the service for HTTP. 
 
 
@@ -58,7 +58,7 @@ I am version v1!
 I am version v2!
 ```
 
-#Splitting Traffic between two application versions.
+Splitting Traffic between two application versions.
 We will be using Traefik Proxy to split traffic between two different applications. This lets us split traffic without having to go through the overhead of istio or any other service mesh. 
 
 There are two resources we will deploy to work with splitting the traffic between two services with Traefik:
@@ -77,12 +77,12 @@ Let us test the traffic splitting between two applications. We will send 100 req
 
 As we can see, the traffic out of 100 requests, 70 are being sent to first application and the rest 30% is being sent to the other application. Hence, we know the setup and the infrastructure is working as expected.
 
-#Practical Working of the cluster and traffic split:
+Practical Working of the cluster and traffic split:
 
-#Splitting the traffic between two services using Traefik Ingress Proxy:
+Splitting the traffic between two services using Traefik Ingress Proxy:
 
 ![Traefik Split](https://raw.githubusercontent.com/shkatara/traefik-split-applications/main/trivago_traefik_split.gif)
 
-#Infrastructure Monitoring with Prometheus and Grafana
+Infrastructure Monitoring with Prometheus and Grafana
 
 ![Infrastructure_Monitoring](https://raw.githubusercontent.com/shkatara/traefik-split-applications/main/prometheus-grafana-monitoring.gif)
