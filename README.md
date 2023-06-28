@@ -33,8 +33,7 @@ Appications and Versions used:
 | Ansible  | 2.9 |
 
 Important Decision Regarding Disabling Firewalld:
-
-I understand disabling firewalld is not the right approach, but it is a pre-requisites for Calico so that firewalld does not interfere with rules added by Calico. 
+<br>I understand disabling firewalld is not the right approach, but it is a pre-requisites for Calico so that firewalld does not interfere with rules added by Calico. 
 If a host firewall is needed, Calico can be used for the same.  It can be configured by Calico HostEndpoint and GlobalNetworkPolicy. 
 
 Installing the stack:
@@ -47,7 +46,7 @@ Installing the stack:
 ```
 
 Test the application Ingresses.
-Once the application is deployed after completely running the site.yml, and traefik is installed, by default in the simplest configuration, it creates a LoadBalancer type of service and exposes ports for port 80 and 443 on the node. So, when we are routing traffic to the ingress using URLs, we need to append the port number of the service for HTTP. 
+<br>Once the application is deployed after completely running the site.yml, and traefik is installed, by default in the simplest configuration, it creates a LoadBalancer type of service and exposes ports for port 80 and 443 on the node. So, when we are routing traffic to the ingress using URLs, we need to append the port number of the service for HTTP. 
 
 
 ```bash
@@ -59,7 +58,6 @@ I am version v2!
 ```
 
 Splitting Traffic between two application versions.
-
 <br>We will be using Traefik Proxy to split traffic between two different applications. This lets us split traffic without having to go through the overhead of istio or any other service mesh. 
 
 There are two resources we will deploy to work with splitting the traffic between two services with Traefik:
@@ -67,7 +65,8 @@ There are two resources we will deploy to work with splitting the traffic betwee
 2. IngressRoute: The Ingress Route is incharge of connecting incoming requests to the services that can handle them, usually the traefiksesrvice. The IngressRoute can also  send traffic to Middleware API resource to update the request or act before forwarding the request to the service. IngressRoutes consists of routes that once are matched, we can transform or forward the request to one or more services based on http headers as well, or just plain simple round robin or weighted traffic split. 
 
 
-Let us test the traffic splitting between two applications. We will send 100 requests and it should be spliiting 70% to the first application, and the rest 30% should be sent to the second application. This will prove that our goal is achieved to split the traffic
+Let us test the traffic splitting between two applications. 
+<br>We will send 100 requests and it should be spliiting 70% to the first application, and the rest 30% should be sent to the second application. This will prove that our goal is achieved to split the traffic
 
 ```bash
 [root@kubesys ~]# for i in {1..100}; do curl version1.trivago.apps.com:$web_port 2>/dev/null; done | grep v1 | wc -l
