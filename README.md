@@ -9,9 +9,9 @@
 
 ```mermaid
 graph TD;
-    Customer-->LoadBalancer;
-    LoadBalancer-->version1;
-    LoadBalancer-->version2;
+    Customer-->Ingress Loadbalancer;
+    Ingress Loadbalancer-->version1;
+    Ingress Loadbalancer-->version2;
 ```
 
 #Appications and Versions used:
