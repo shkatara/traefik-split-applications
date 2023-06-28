@@ -1,3 +1,39 @@
+The purpose of this repository is to serve as a walkthrough for the followings:
+
+1. Install Kubernetes Cluster
+2. Deploying Calico CNI
+3. Deploying multiple versions of the application
+4. Split traffic between those two applications.
+
+The Traffic Split looks something like:
+
+```mermaid
+graph TD;
+    Customer-->Ingress_Loadbalancer;
+    Ingress_Loadbalancer-->App_version_1;
+    Ingress_Loadbalancer-->App_version_2;
+```
+
+While not shown in the diagram, the split is with the ratio of 70:30 for App_version_1:App_version_2. 
+70% traffic will go to Application Version 1.
+30% traffic will go to Application Version 1.
+
+Appications and Versions used:
+
+
+| Applications  | Version |
+| ------------- | ------------- |
+| Kubernetes  | 1.27.3  |
+| Docker  | 24.0.2  |
+| Helm  | 3 |
+| CentOS  | 7 (minimal installation)  |
+| Calico  | 3.26.1 |
+| Traefik  | 2.10.1 |
+| Python  | 3.6 |
+| Ansible  | 2.9 |
+
+
+
 #Splitting the traffic between two services using Traefik Ingress Proxy:
 
 ![Traefik Split](https://raw.githubusercontent.com/shkatara/traefik-split-applications/main/trivago_traefik_split.gif)
