@@ -83,6 +83,3 @@ Splitting the traffic between two services using Traefik Ingress Proxy:
 
 ![Traefik Split](https://raw.githubusercontent.com/shkatara/traefik-split-applications/main/trivago_traefik_split.gif)
 
-Infrastructure Monitoring with Prometheus and Grafana
-
-![Infrastructure_Monitoring](https://raw.githubusercontent.com/shkatara/traefik-split-applications/main/prometheus-grafana-monitoring.gif)
