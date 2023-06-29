@@ -2,6 +2,9 @@
   hosts: localhost
   become: true
   tasks:
+    - name: Install Kubernetes.core collection
+      command: ansible-galaxy install -r  requirements.yml
+      
     - name: Install Kubernetes Binaries
       import_role: 
         name: kubernetes-binaries-install
